@@ -1,27 +1,10 @@
-/* ************************************************************************
-
-   qooxdoo - the new era of web development
-
-   http://qooxdoo.org
-
-   Copyright:
-     2004-2009 1&1 Internet AG, Germany, http://www.1und1.de
-
-   License:
-     LGPL: http://www.gnu.org/licenses/lgpl.html
-     EPL: http://www.eclipse.org/org/documents/epl-v10.php
-     See the LICENSE file in the project's top-level directory for details.
-
-   Authors:
-     * Martin Wittemann (martinwittemann)
-
-************************************************************************ */
-/**
- * Data model for a feed folder.
+/*
+ * To change this template, choose Tools | Templates
+ * and open the template in the editor.
  */
-qx.Class.define("joomtu.model.AdminMenu",
+qx.Class.define("joomtu.model.TableExt",
 {
-    extend : qx.core.Object,
+    extend : qx.ui,
 
     /**
    * @param title {String} The name of the folder.
@@ -31,7 +14,7 @@ qx.Class.define("joomtu.model.AdminMenu",
         this.base(arguments);
 
         this.setTitle(title);
-        this.setFeeds(new qx.data.Array());
+        this.setMenus(new qx.data.Array());
     },
 
     properties :
@@ -55,10 +38,10 @@ qx.Class.define("joomtu.model.AdminMenu",
 
 
         /** Array of feeds. This could contain another feed folder or a feed. */
-        feeds :
+        menus :
         {
             check : "qx.data.Array",
-            event: "changeFeeds"
+            event: "changeMenus"
         },
 
 
@@ -81,3 +64,4 @@ qx.Class.define("joomtu.model.AdminMenu",
         }
     }
 });
+

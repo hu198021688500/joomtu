@@ -38,7 +38,7 @@ qx.Class.define("joomtu.view.desktop.Header",
         this.setLayout(new qx.ui.layout.HBox);
         this.setAppearance("app-header");
 
-        var title = new qx.ui.basic.Label("Feed Reader");
+        var title = new qx.ui.basic.Label("Mo Manager System");
         var version = new qxc.ui.versionlabel.VersionLabel();
         version.setFont("default");
 
