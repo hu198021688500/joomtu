@@ -49,8 +49,6 @@ qx.Class.define("joomtu.Application",
         /**
          * This method contains the initial application code and gets called
          * during startup of the application
-         *
-         * @lint ignoreDeprecated(alert)
          */
         main : function()
         {
@@ -112,6 +110,14 @@ qx.Class.define("joomtu.Application",
             this.__treeController.setIconOptions(iconOptions);
             // set the property for the icon binding
             this.__treeController.setIconPath("state");
+            
+            // create a list for the selection
+            var list = new qx.ui.form.List();
+            list.setHeight(300);
+            this.__mainArea.add(list);
+            
+            // bind the list to the selection of the tree
+            new qx.data.controller.List(this.__treeController.getSelection(), list, "title");
         },
 
         /**

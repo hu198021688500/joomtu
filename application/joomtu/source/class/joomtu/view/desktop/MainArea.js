@@ -10,10 +10,9 @@ qx.Class.define("joomtu.view.desktop.MainArea",
     {
         this.base(arguments);
 
-        this.setLayout(new qx.ui.layout.Basic());
-
+        this.setLayout(new qx.ui.layout.VBox(5));
+        
         this.__createUi();
-
     },
 
     properties :
@@ -26,50 +25,50 @@ qx.Class.define("joomtu.view.desktop.MainArea",
 
         __toolBar : null,
         __content : null,
+        
+        getToolBar : function(){
+            return this.__toolBar;
+        },
+        
+        getContent : function(){
+            return this.__content;
+        },
 
         __createUi : function(){
+            //add toolbar
             var toolbar = new qx.ui.toolbar.ToolBar();
-            var newButton = new qx.ui.toolbar.Button("New");
-            toolbar.add(newButton);
-            this.add(toolbar, {
-                left: 10,
-                top: 10
-            });
+            toolbar.addSpacer();
+            var listButton = new qx.ui.toolbar.Button("List");
+            toolbar.add(listButton);
+            var iconButton = new qx.ui.toolbar.Button("Icon");
+            toolbar.add(iconButton);
+            var closeButton = new qx.ui.toolbar.Button("Close");
+            closeButton.addListener("execute", function(){
+                this.remove(toolbar);
+            }, this);
+            toolbar.add(closeButton);
+            this.add(toolbar);
 
-            var rowData = this.__createRandomRows(50);
-
+            //add table
             var tableModel = new qx.ui.table.model.Simple();
-            tableModel.setColumns([ "ID", "A number", "A date", "Boolean" ]);
-            tableModel.setData(rowData);
+            tableModel.setColumns(["ID", "A number", "A date", "Boolean"]);
+            tableModel.setData(this.__createRandomRows(80));
             tableModel.setColumnEditable(1, true);
             tableModel.setColumnEditable(2, true);
             tableModel.setColumnSortable(3, false);
 
             var table = new qx.ui.table.Table(tableModel);
-
-            table.set({
-                width: 600,
-                height: 400,
-                decorator : null
-            });
-
             table.getSelectionModel().setSelectionMode(qx.ui.table.selection.Model.MULTIPLE_INTERVAL_SELECTION);
 
             var tcm = table.getTableColumnModel();
-
             tcm.setDataCellRenderer(3, new qx.ui.table.cellrenderer.Boolean());
             tcm.setHeaderCellRenderer(2, new qx.ui.table.headerrenderer.Icon("icon/16/apps/office-calendar.png", "A date"));
-
             table.setFocusedCell(2,5);
-
-            this.add(table, {
-                left: 10,
-                top: 50
+            this.add(table,{
+                flex:1
             });
-
-
-
         },
+        
         __createRandomRows : function(rowCount)
         {
             var rowData = [];
