@@ -32,12 +32,19 @@ qx.Class.define("joomtu.Application",
     members :
     {
         // private memebers
+        __commands : null,
+
         __header : null,
         __toolBarView : null,
         __horizontalSplitPane : null,
         __verticalSplitPane : null,
         __treeView : null,
-        __adminMenu : null,
+
+        __menuFolder : null,
+        __userMenuFolder : null,
+        __staticMenuFolder: null,
+
+        __mainArea : null,
 
         /**
          * This method contains the initial application code and gets called
@@ -67,8 +74,17 @@ qx.Class.define("joomtu.Application",
          */
         buildUpGui : function()
         {
+            // Initialize commands
+            this._initializeCommands();
+
             // Create application layout
             this._createLayout();
+
+            // Initialize the model
+            var model = new joomtu.model.MainModel();
+            this.__menuFolder = model.getMenuFolder();
+            this.__staticMenuFolder = model.getStaticMenuFolder();
+            this.__userMenuFolder = model.getUserMenuFolder();
 
             // Initialize the bindings
             this._setUpBinding();
@@ -89,12 +105,8 @@ qx.Class.define("joomtu.Application",
                 converter: this._state2iconConverter
             };
             // create the controller which binds the feeds to the tree
-            // 1. Parameter: The model (root feed folder)
-            // 2. Parameter: The view (the tree widget)
-            // 3. Parameter: name of the children of the model items
-            // 4. Parameter: name of the model property to show as label in the tree
             this.__treeController = new qx.data.controller.Tree(
-                this.__adminMenu, this.__treeView, "feeds", "title"
+                this.__menuFolder, this.__treeView, "menus", "title"
                 );
             // set the options for the icon binding
             this.__treeController.setIconOptions(iconOptions);
@@ -138,19 +150,52 @@ qx.Class.define("joomtu.Application",
             this.__treeView.setPadding(0);
             this.__horizontalSplitPane.add(this.__treeView, 0);
 
-            // Create vertical splitpane for list and detail view
-            this.__verticalSplitPane = new qx.ui.splitpane.Pane("vertical");
-            this.__verticalSplitPane.setDecorator(null);
-            this.__horizontalSplitPane.add(this.__verticalSplitPane, 1);
+            this.__mainArea = new joomtu.view.desktop.MainArea();
+            this.__horizontalSplitPane.add(this.__mainArea, 1);
+        },
+
+        /*
+         ---------------------------------------------------------------------------
+            COMMANDS
+         ---------------------------------------------------------------------------
+        */
+
+        /**
+         * Initialize commands (shortcuts, ...)
+        */
+        _initializeCommands : function()
+        {
+            var commands = {};
+            commands.about = new qx.ui.core.Command("F1");
+            commands.about.addListener("execute", this.showAbout, this);
+            this.__commands = commands;
+        },
+
+        showAbout : function() {
+            alert(this.tr("joomtu (qooxdoo powered)"));
         },
 
         /**
-     * Converter function which converts the state of a feed to a icon url.
-     * @param value {String} The loading state of the request.
-     */
+         * Get the command with the given command id
+         *
+         * @param commandId {String} the command's command id
+         * @return {qx.ui.core.Command} The command
+         */
+        getCommand : function(commandId) {
+            return this.__commands[commandId];
+        },
+
+        _treeControllerChange : function(ev) {
+            alert(1);
+        },
+
+        /**
+         * Converter function which converts the state of a feed to a icon url.
+         * @param value {String} The loading state of the request.
+         */
         _state2iconConverter : function(value) {
             if (value == "new" || value == "loading") {
-                return "feedreader/images/loading22.gif";
+                return "joomtu/images/loading22.gif";
             } else if (value == "loaded") {
                 return "icon/22/apps/internet-feed-reader.png";
             } else if (value == "error") {
@@ -163,10 +208,10 @@ qx.Class.define("joomtu.Application",
     },
 
     /*
-  *****************************************************************************
+     *****************************************************************************
      DESTRUCTOR
-  *****************************************************************************
-  */
+     *****************************************************************************
+     */
 
     destruct : function()
     {
