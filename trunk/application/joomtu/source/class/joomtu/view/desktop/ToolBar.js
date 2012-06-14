@@ -46,7 +46,7 @@ qx.Class.define("joomtu.view.desktop.ToolBar",
   */
 
     /**
-   * @param controller {feedreader.Application} The main application class
+   * @param controller {joomtu.Application} The main application class
    */
     construct : function(controller)
     {
@@ -213,7 +213,7 @@ qx.Class.define("joomtu.view.desktop.ToolBar",
             // set / reset icon of the button
             if (loading) {
                 button.setUserData("originalIcon", button.getIcon());
-                button.setIcon("feedreader/images/loading22.gif");
+                button.setIcon("joomtu/images/loading22.gif");
             } else {
                 var icon = button.getUserData("originalIcon");
                 button.setIcon(icon);
@@ -221,14 +221,11 @@ qx.Class.define("joomtu.view.desktop.ToolBar",
         }
     },
 
-
-
     /*
-   *****************************************************************************
+     *****************************************************************************
       DESTRUCTOR
-   *****************************************************************************
+     *****************************************************************************
    */
-
     destruct : function() {
         this._disposeObjects("__removeBtn", "__overflowMenu");
     }
