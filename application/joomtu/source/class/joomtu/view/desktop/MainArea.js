@@ -2,75 +2,120 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-qx.Class.define("joomtu.view.desktop.MainArea",
-{
-    extend : qx.ui.container.Composite,
+qx.Class.define("joomtu.view.desktop.MainArea", {
 
-    construct : function()
-    {
+    extend : qx.ui.splitpane.Pane,
+
+    construct : function() {
         this.base(arguments);
 
-        this.setLayout(new qx.ui.layout.VBox(5));
-        
-        this.__createUi();
+        this.setDecorator(null);
+        this.setOrientation("vertical");
+        this.__createUI();
     },
 
-    properties :
-    {
+    properties : {
 
     },
 
-    members :{
+    members : {
         __nextId: 0,
 
         __toolBar : null,
-        __content : null,
-        
-        getToolBar : function(){
+        __table : null,
+        __information : null,
+
+        getToolBar : function() {
             return this.__toolBar;
         },
-        
-        getContent : function(){
-            return this.__content;
+
+        getTable : function() {
+            return this.__table;
         },
 
-        __createUi : function(){
+        getInformation : function() {
+            return this.__information;
+        },
+
+        __createUI : function() {
+            var composite = new qx.ui.container.Composite();
+            composite.setLayout(new qx.ui.layout.VBox(5));
+
             //add toolbar
-            var toolbar = new qx.ui.toolbar.ToolBar();
-            toolbar.addSpacer();
+            this.__toolBar = new qx.ui.toolbar.ToolBar();
             var listButton = new qx.ui.toolbar.Button("List");
-            toolbar.add(listButton);
+            this.__toolBar.add(listButton);
             var iconButton = new qx.ui.toolbar.Button("Icon");
-            toolbar.add(iconButton);
+            this.__toolBar.add(iconButton);
+            this.__toolBar.addSpacer();
             var closeButton = new qx.ui.toolbar.Button("Close");
-            closeButton.addListener("execute", function(){
-                this.remove(toolbar);
+            closeButton.addListener("execute", function() {
+                composite.remove(this.__toolBar);
             }, this);
-            toolbar.add(closeButton);
-            this.add(toolbar);
+            this.__toolBar.add(closeButton);
+            composite.add(this.__toolBar);
+
+            var tableModel =  new joomtu.model.RemoteTable();
+            //tableModel.setBlockSize(5);
+            //tableModel.setMaxCachedBlockCount(2);
+            var custom = {
+                tableColumnModel : function(obj) {
+                    return new qx.ui.table.columnmodel.Resize(obj);
+                }
+            };
+            /*tableModel.addListener("dataChanged", function(evt){
+                var data = evt.getData();
+            //this.__table.setAdditionalStatusBarText(data.firstRow + " to " + data.lastRow + " " + this.getRowCount());
+            });*/
+            this.__table = new qx.ui.table.Table(tableModel, custom);
+            var col = this.__table.getTableColumnModel().getBehavior();
+            col.setWidth(0, '10%');
+            col.setWidth(1, '90%');
+
+            // Establish a context menu for the boolean field, to select its value
+            //this.__table.setContextMenuHandler(1, this.__contextMenuHandlerBoolean);
 
             //add table
-            var tableModel = new qx.ui.table.model.Simple();
+            /*var tableModel = new qx.ui.table.model.Simple();
             tableModel.setColumns(["ID", "A number", "A date", "Boolean"]);
             tableModel.setData(this.__createRandomRows(80));
             tableModel.setColumnEditable(1, true);
             tableModel.setColumnEditable(2, true);
             tableModel.setColumnSortable(3, false);
 
-            var table = new qx.ui.table.Table(tableModel);
-            table.getSelectionModel().setSelectionMode(qx.ui.table.selection.Model.MULTIPLE_INTERVAL_SELECTION);
+            this.__table = new qx.ui.table.Table(tableModel);
+            this.__table.getSelectionModel().setSelectionMode(qx.ui.table.selection.Model.MULTIPLE_INTERVAL_SELECTION);
 
-            var tcm = table.getTableColumnModel();
+            var tcm = this.__table.getTableColumnModel();
             tcm.setDataCellRenderer(3, new qx.ui.table.cellrenderer.Boolean());
             tcm.setHeaderCellRenderer(2, new qx.ui.table.headerrenderer.Icon("icon/16/apps/office-calendar.png", "A date"));
-            table.setFocusedCell(2,5);
-            this.add(table,{
+            this.__table.setFocusedCell(2,5);*/
+            composite.add(this.__table, {
                 flex:1
             });
+
+            this.add(composite, 1);
+
+            // create a list for the selection
+            this.__information = new qx.ui.form.List();
+            this.add(this.__information, 0);
         },
-        
-        __createRandomRows : function(rowCount)
-        {
+
+        __contextMenuHandlerBoolean : function(col, row, table, dataModel, contextMenu) {
+            var menuEntry;
+            for (var i = 0; i <= 1; i++) {
+                menuEntry = new qx.ui.menu.Button("menu" + i);
+                menuEntry.setUserData("value", "menu" + i);
+                menuEntry.addListener("execute", function(evt) {
+                    // Toggle the value
+                    dataModel.setValue(col, row, this.getUserData("value"));
+                });
+                contextMenu.add(menuEntry);
+            }
+            return true;
+        },
+
+        __createRandomRows : function(rowCount) {
             var rowData = [];
             var now = new Date().getTime();
             var dateRange = 400 * 24 * 60 * 60 * 1000; // 400 days

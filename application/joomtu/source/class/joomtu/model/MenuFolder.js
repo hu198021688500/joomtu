@@ -1,79 +1,50 @@
-/* ************************************************************************
-
-   qooxdoo - the new era of web development
-
-   http://qooxdoo.org
-
-   Copyright:
-     2004-2009 1&1 Internet AG, Germany, http://www.1und1.de
-
-   License:
-     LGPL: http://www.gnu.org/licenses/lgpl.html
-     EPL: http://www.eclipse.org/org/documents/epl-v10.php
-     See the LICENSE file in the project's top-level directory for details.
-
-   Authors:
-     * Martin Wittemann (martinwittemann)
-
-************************************************************************ */
 /**
  * Data model for a feed folder.
  */
-qx.Class.define("joomtu.model.MenuFolder",
-{
+qx.Class.define("joomtu.model.MenuFolder", {
+
     extend : qx.core.Object,
 
     /**
-   * @param title {String} The name of the folder.
-   */
-    construct : function(title)
-    {
+     * @param title {String} The name of the folder.
+    */
+    construct : function(title) {
         this.base(arguments);
 
         this.setTitle(title);
         this.setMenus(new qx.data.Array());
     },
 
-    properties :
-    {
+    properties : {
         /** Title / Name of the item */
-        title :
-        {
+        title : {
             check : "String",
             event : "changeTitle",
             init: "Folder"
         },
 
-
         /** The feed category */
-        category :
-        {
+        category : {
             check : "String",
             init : "",
             event : "dataModified"
         },
 
-
         /** Array of feeds. This could contain another feed folder or a feed. */
-        menus :
-        {
+        menus : {
             check : "qx.data.Array",
             event: "changeMenus"
         },
 
-
         /** Array of articles. This is needed for the data binding. */
-        articles :
-        {
+        articles : {
             check : "qx.data.Array",
             event : "changeArticles",
             init: new qx.data.Array()
         },
 
-
         /** The loading state of the folder. Needed for data binding. */
-        state :
-        {
+        state : {
             check : ["new", "loading", "loaded", "error"],
             init : "null",
             event : "stateModified",
