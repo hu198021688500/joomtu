@@ -1,5 +1,5 @@
 /**
- * Data model for a feed folder.
+ * Data model for a menu folder.
  */
 qx.Class.define("joomtu.model.MenuFolder", {
 

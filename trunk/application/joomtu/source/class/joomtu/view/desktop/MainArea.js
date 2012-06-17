@@ -1,19 +1,16 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 qx.Class.define("joomtu.view.desktop.MainArea", {
 
     extend : qx.ui.splitpane.Pane,
 
     construct : function() {
         this.base(arguments);
-
+        
         this.setDecorator(null);
         this.setOrientation("vertical");
+        
         this.__createUI();
     },
-
+    
     properties : {
 
     },
@@ -24,6 +21,8 @@ qx.Class.define("joomtu.view.desktop.MainArea", {
         __toolBar : null,
         __table : null,
         __information : null,
+        
+        __config : null,
 
         getToolBar : function() {
             return this.__toolBar;
@@ -40,7 +39,6 @@ qx.Class.define("joomtu.view.desktop.MainArea", {
         __createUI : function() {
             var composite = new qx.ui.container.Composite();
             composite.setLayout(new qx.ui.layout.VBox(5));
-
             //add toolbar
             this.__toolBar = new qx.ui.toolbar.ToolBar();
             var listButton = new qx.ui.toolbar.Button("List");
@@ -55,8 +53,9 @@ qx.Class.define("joomtu.view.desktop.MainArea", {
             this.__toolBar.add(closeButton);
             composite.add(this.__toolBar);
 
+            //var tableModel =  new joomtu.model.TablePaging(this.__config.uiConfig.user_list);
             var tableModel =  new joomtu.model.RemoteTable();
-            //tableModel.setBlockSize(5);
+            tableModel.setBlockSize(2);
             //tableModel.setMaxCachedBlockCount(2);
             var custom = {
                 tableColumnModel : function(obj) {
@@ -67,7 +66,8 @@ qx.Class.define("joomtu.view.desktop.MainArea", {
                 var data = evt.getData();
             //this.__table.setAdditionalStatusBarText(data.firstRow + " to " + data.lastRow + " " + this.getRowCount());
             });*/
-            this.__table = new qx.ui.table.Table(tableModel, custom);
+            //this.__table = new qx.ui.table.Table(tableModel, custom);
+            this.__table = new joomtu.view.desktop.PagingTable(tableModel, custom);
             var col = this.__table.getTableColumnModel().getBehavior();
             col.setWidth(0, '10%');
             col.setWidth(1, '90%');
