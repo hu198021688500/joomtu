@@ -66,7 +66,41 @@
                 "manifest" : "${QOOXDOO_PATH}/component/library/versionlabel/Manifest.json"
             }
             ]
-        }
+        },"common" :
+    {
+      "environment" :
+      {
+        "qx.nativeScrollBars" : true
+      },
+      
+      "compile-options" :
+      {
+        "paths" : { "scripts-add-hash" : true },
+        "uris"  : { "add-nocache-param": false }
+      },
+
+      "packages" : 
+      {
+        "separate-loader"  : true,
+        "i18n-as-parts"    : true,
+        "parts" : 
+        {      
+        "boot": 
+          {
+            "include" : ["${QXTHEME}", "joomtu.Application"]
+          },    
+          "loginuser": 
+          {
+            "include" : ["joomtu.view.desktop.LoginUserWindow"]
+            //,"expected-load-order" : 1
+          }
+        },
+        "sizes" : 
+        {
+          "min-package" : 10
+        } 
+      }
+    }
 
 
     // If you want to tweak a job setting, see the following sample where
