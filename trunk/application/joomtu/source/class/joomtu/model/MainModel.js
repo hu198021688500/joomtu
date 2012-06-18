@@ -1,7 +1,3 @@
-/**
- * Main model containing the feeds and all the data. This is shared for mobiel
- * and desktop.
- */
 qx.Class.define("joomtu.model.MainModel", {
 
 	extend : qx.core.Object,
