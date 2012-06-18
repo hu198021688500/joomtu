@@ -1,77 +1,66 @@
-/**
- * Date data model for a news feed
- */
 qx.Class.define("joomtu.model.Menu", {
 
-    extend : qx.core.Object,
+	extend : qx.core.Object,
 
-    /*
-     *****************************************************************************
-     CONSTRUCTOR
-     *****************************************************************************
-    */
+	/**
+	 * @param title {String} feed title
+	 * @param url {String} feed url
+	 * @param category {String?""} feed category
+	 */
+	construct : function(title, url, category) {
+		this.base(arguments);
 
-    /**
-     * @param title {String} feed title
-     * @param url {String} feed url
-     * @param category {String?""} feed category
-    */
-    construct: function(title, url, category) {
-        this.base(arguments);
+		this.set({
+					url : url,
+					title : title,
+					category : category || ""
+				});
 
-        this.set({
-            url: url,
-            title: title,
-            category : category || ""
-        });
+		this.setArticles(new qx.data.Array());
+	},
 
+	/*
+	 * ****************************************************************************
+	 * PROPERTIES
+	 * ****************************************************************************
+	 */
 
-        this.setArticles(new qx.data.Array());
-    },
+	properties : {
+		/** The articles in an array */
+		articles : {
+			check : "qx.data.Array",
+			event : "changeArticles"
+		},
 
+		/** The currently selected article */
+		selectedArticle : {
+			nullable : true
+		},
 
-    /*
-     *****************************************************************************
-     PROPERTIES
-     *****************************************************************************
-    */
+		/** The feed URL */
+		url : {
+			check : "String",
+			event : "changeUrl"
+		},
 
-    properties : {
-        /** The articles in an array */
-        articles : {
-            check : "qx.data.Array",
-            event : "changeArticles"
-        },
+		/** The feed title */
+		title : {
+			check : "String",
+			event : "changeTitle"
+		},
 
-        /** The currently selected article */
-        selectedArticle : {
-            nullable: true
-        },
+		/** The feed category */
+		category : {
+			check : "String",
+			init : "",
+			event : "dataModified"
+		},
 
-        /** The feed URL */
-        url : {
-            check : "String",
-            event : "changeUrl"
-        },
-
-        /** The feed title */
-        title : {
-            check : "String",
-            event : "changeTitle"
-        },
-
-        /** The feed category */
-        category : {
-            check : "String",
-            init : "",
-            event : "dataModified"
-        },
-
-        /** The current loading state */
-        state : {
-            check : ["new", "loading", "loaded", "error", "cached"],
-            init : "new",
-            event : "stateModified"
-        }
-    }
+		/** The current loading state */
+		state : {
+			check : ["new", "loading", "loaded", "error", "cached"],
+			init : "new",
+			event : "stateModified"
+		}
+	}
 });
