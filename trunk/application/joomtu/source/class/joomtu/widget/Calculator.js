@@ -1,8 +1,3 @@
-/*
- * To change this template, choose Tools | Templates and open the template in
- * the editor.
- */
-
 qx.Class.define("joomtu.widget.Calculator", {
 
 	extend : qx.ui.window.Window,
